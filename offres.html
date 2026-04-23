@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Toutes les offres — Yoann Desgrand</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #080808;
+      --surface:   #111111;
+      --surface2:  #161616;
+      --border:    #222222;
+      --gold:      #C4973A;
+      --gold-light:#E2B95A;
+      --text:      #F0EAE0;
+      --muted:     #7a7065;
+      --dim:       #3a3530;
+      --radius:    12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.4;
+    }
+
+    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    /* ─── HEADER ─── */
+    header {
+      padding: 56px 0 48px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 56px;
+      position: relative; z-index: 1;
+    }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--muted);
+      text-decoration: none; letter-spacing: 0.08em;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+    .label {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); display: block; margin-bottom: 14px;
+    }
+    header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 6vw, 62px);
+      font-weight: 300; line-height: 1.1;
+    }
+    header h1 em { font-style: italic; color: var(--gold); }
+    header p { font-size: 14px; color: var(--muted); margin-top: 14px; }
+
+    /* ─── SECTION TITLE ─── */
+    .section-title {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 20px;
+    }
+    .section-title h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px; font-weight: 400;
+      white-space: nowrap;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1; height: 1px;
+      background: var(--border);
+    }
+    .section-tag {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 8px; display: block;
+    }
+
+    section { margin-bottom: 64px; }
+
+    /* ─── TABLE ─── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    thead tr {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+    thead th {
+      padding: 16px 20px;
+      text-align: left;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    thead th:last-child { text-align: right; }
+
+    tbody tr {
+      border-bottom: 1px solid var(--dim);
+      transition: background 0.15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(196,151,58,0.03); }
+    tbody tr.highlight { background: rgba(196,151,58,0.05); }
+    tbody tr.highlight td:first-child { border-left: 2px solid var(--gold); }
+
+    td { padding: 18px 20px; vertical-align: middle; }
+
+    .offer-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; font-weight: 400;
+      display: block; line-height: 1.2;
+    }
+    .offer-sub {
+      font-size: 12px; color: var(--muted);
+      margin-top: 3px; display: block;
+    }
+
+    .price-cell { text-align: right; }
+    .price-main {
+      font-size: 22px; font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      display: block; line-height: 1;
+    }
+    .price-main.free { color: var(--gold); font-size: 18px; }
+    .price-unit {
+      font-size: 11px; color: var(--muted);
+      display: block; margin-top: 3px;
+    }
+
+    .saving-badge {
+      display: inline-block;
+      font-size: 10px; font-weight: 600;
+      color: var(--gold);
+      background: rgba(196,151,58,0.12);
+      padding: 3px 8px; border-radius: 4px;
+      margin-top: 4px;
+    }
+
+    .best-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: #000; background: var(--gold);
+      padding: 4px 10px; border-radius: 4px;
+    }
+
+    /* check / dot */
+    .check { color: var(--gold); font-size: 14px; }
+    .features-list {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .features-list span {
+      font-size: 12px; color: var(--muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .features-list span::before { content: '→'; color: var(--gold); font-size: 10px; }
+
+    /* ─── PROMO BOX ─── */
+    .promo-box {
+      margin-top: 16px;
+      padding: 18px 24px;
+      background: rgba(196,151,58,0.05);
+      border: 1px solid rgba(196,151,58,0.2);
+      border-radius: var(--radius);
+      font-size: 13px; color: var(--muted); line-height: 1.6;
+    }
+    .promo-box strong { color: var(--gold-light); font-weight: 500; }
+
+    /* ─── PAYMENT INFO ─── */
+    .payment-info {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      margin-top: 16px;
+    }
+    .payment-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 12px; color: var(--muted);
+    }
+    .payment-pill .icon { font-size: 16px; }
+
+    /* ─── CTA ─── */
+    .cta-bar {
+      margin-top: 64px;
+      padding: 40px;
+      background: var(--surface);
+      border: 1px solid rgba(196,151,58,0.2);
+      border-radius: var(--radius);
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-bar::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(196,151,58,0.05), transparent);
+    }
+    .cta-bar h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px; font-weight: 300;
+      margin-bottom: 8px; position: relative; z-index: 1;
+    }
+    .cta-bar h3 em { font-style: italic; color: var(--gold); }
+    .cta-bar p { font-size: 13px; color: var(--muted); margin-bottom: 24px; position: relative; z-index: 1; }
+    .cta-btns { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; position: relative; z-index: 1; }
+    .btn-gold {
+      background: var(--gold); color: #000;
+      padding: 14px 32px; border-radius: 8px;
+      font-size: 13px; font-weight: 500;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-gold:hover { background: var(--gold-light); }
+    .btn-outline {
+      background: transparent; color: var(--text);
+      padding: 14px 32px; border-radius: 8px;
+      font-size: 13px; font-weight: 400;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 640px) {
+      td { padding: 14px 14px; }
+      thead th { padding: 12px 14px; }
+      .offer-name { font-size: 16px; }
+      .price-main { font-size: 18px; }
+      .cta-bar { padding: 28px 20px; }
+      .cta-btns { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ─── HEADER ─── -->
+  <header>
+    <a href="javascript:window.close()" class="back-link">← Retour</a>
+    <span class="label">Yoann Desgrand — Coach Muscu & Nutrition</span>
+    <h1>Toutes les <em>offres</em></h1>
+    <p>ON AIR Fitness BNF — Paris 13e &nbsp;·&nbsp; Coaching en ligne disponible partout</p>
+  </header>
+
+  <!-- ─── SÉANCES EN SALLE ─── -->
+  <section>
+    <span class="section-tag">Coaching en salle · ON AIR BNF Paris 13e</span>
+    <div class="section-title">
+      <h2>Séances individuelles</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Offre</th>
+            <th>Ce qui est inclus</th>
+            <th>Tarif</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="highlight">
+            <td>
+              <span class="offer-name">Séance Découverte</span>
+              <span class="offer-sub">1ère séance — sans engagement</span>
+            </td>
+            <td>
+              <div class="features-list">
+                <span>Bilan complet de ta condition physique</span>
+                <span>Définition de tes objectifs</span>
+                <span>Présentation du programme SHIFT</span>
+              </div>
+            </td>
+            <td class="price-cell">
+              <span class="price-main free">Offerte</span>
+              <span class="price-unit">ta 1ère séance</span>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="offer-name">Séance à l'unité</span>
+              <span class="offer-sub">Sans engagement</span>
+            </td>
+            <td>
+              <div class="features-list">
+                <span>Programme sur mesure</span>
+                <span>Suivi de ta progression</span>
+                <span>CB ou espèces acceptés</span>
+              </div>
+            </td>
+            <td class="price-cell">
+              <span class="price-main">60€</span>
+              <span class="price-unit">par séance</span>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="offer-name">Pack 5 séances</span>
+              <span class="offer-sub">Valable 3 mois</span>
+            </td>
+            <td>
+              <div class="features-list">
+                <span>5 séances à utiliser librement</span>
+                <span>Programme progressif inclus</span>
+                <span>Bilan mi-parcours</span>
+                <span>CB ou espèces acceptés</span>
+              </div>
+            </td>
+            <td class="price-cell">
+              <span class="price-main">275€</span>
+              <span class="price-unit">55€ / séance</span>
+              <span class="saving-badge">Économie 25€</span>
+            </td>
+          </tr>
+
+          <tr class="highlight">
+            <td>
+              <span class="offer-name">Pack 10 séances</span>
+              <span class="offer-sub">Programme SHIFT · Valable 6 mois</span>
+              <br/><span class="best-badge">⭐ Meilleure offre</span>
+            </td>
+            <td>
+              <div class="features-list">
+                <span>10 séances personnalisées</span>
+                <span>Programme SHIFT complet</span>
+                <span>Suivi nutrition de base offert</span>
+                <span>Bilan final de transformation</span>
+                <span>CB ou espèces acceptés</span>
+              </div>
+            </td>
+            <td class="price-cell">
+              <span class="price-main">500€</span>
+              <span class="price-unit">50€ / séance</span>
+              <span class="saving-badge">Économie 100€</span>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="promo-box">
+      💡 <strong>Abonnés coaching sport (59€/mois) :</strong> séances en salle à <strong>50€ l'unité</strong> au lieu de 60€. Combine l'abonnement en ligne + tes séances au meilleur tarif.
+    </div>
+
+    <div class="payment-info">
+      <span class="payment-pill"><span class="icon">💳</span> Paiement CB via Stripe</span>
+      <span class="payment-pill"><span class="icon">💶</span> Espèces acceptées sur place</span>
+      <span class="payment-pill"><span class="icon">📍</span> ON AIR BNF — 93 Av. de France, Paris 13e</span>
+    </div>
+  </section>
+
+  <!-- ─── COACHING EN LIGNE ─── -->
+  <section>
+    <span class="section-tag">Coaching en ligne · Disponible partout</span>
+    <div class="section-title">
+      <h2>Abonnements mensuels</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Offre</th>
+            <th>Ce qui est inclus</th>
+            <th>Tarif</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td>
+              <span class="offer-name">Coaching Sport</span>
+              <span class="offer-sub">App Harmony · Sans engagement</span>
+            </td>
+            <td>
+              <div class="features-list">
+                <span>Programme sport sur mesure via Harmony</span>
+                <span>Ajustements hebdomadaires</span>
+                <span>Messagerie directe avec Yoann</span>
+                <span>Séances en salle à 50€ (au lieu de 60€)</span>
+              </div>
+            </td>
+            <td class="price-cell">
+              <span class="price-main">59€</span>
+              <span class="price-unit">par mois</span>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="offer-name">Coaching Nutrition</span>
+              <span class="offer-sub">Suivi nutritionnel · Sans engagement</span>
+            </td>
+            <td>
+              <div class="features-list">
+                <span>Plan nutritionnel personnalisé</span>
+                <span>Rééquilibrage alimentaire durable</span>
+                <span>Suivi bilan sanguin & carences</span>
+                <span>Ajustements selon tes résultats</span>
+              </div>
+            </td>
+            <td class="price-cell">
+              <span class="price-main">119€</span>
+              <span class="price-unit">par mois</span>
+            </td>
+          </tr>
+
+          <tr class="highlight">
+            <td>
+              <span class="offer-name">Sport + Nutrition</span>
+              <span class="offer-sub">Pack complet · Sans engagement</span>
+              <br/><span class="best-badge">⭐ Meilleure offre</span>
+            </td>
+            <td>
+              <div class="features-list">
+                <span>App Harmony sport incluse</span>
+                <span>Suivi nutritionnel complet inclus</span>
+                <span>Approche corps & alimentation 360°</span>
+                <span>Séances en salle à 50€</span>
+                <span>Priorité de réponse</span>
+              </div>
+            </td>
+            <td class="price-cell">
+              <span class="price-main">149€</span>
+              <span class="price-unit">par mois</span>
+              <span class="saving-badge">Économie 29€/mois</span>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="payment-info">
+      <span class="payment-pill"><span class="icon">💳</span> Paiement CB via Stripe</span>
+      <span class="payment-pill"><span class="icon">🔄</span> Prélèvement mensuel automatique</span>
+      <span class="payment-pill"><span class="icon">❌</span> Sans engagement</span>
+    </div>
+  </section>
+
+  <!-- ─── CTA ─── -->
+  <div class="cta-bar">
+    <h3>Ta 1ère séance est <em>offerte</em></h3>
+    <p>Réserve maintenant, sans CB, sans engagement. On fait le point ensemble.</p>
+    <div class="cta-btns">
+      <!-- Remplace le onclick par ton lien Calendly -->
+      <a href="https://calendly.com/TON-LIEN-CALENDLY" target="_blank" class="btn-gold">🎁 Réserver ma séance découverte</a>
+      <a href="https://wa.me/33687207855?text=Bonjour%20Yoann%2C%20j%27aimerais%20avoir%20plus%20d%27informations%20sur%20ton%20coaching." target="_blank" class="btn-outline">💬 Poser une question</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

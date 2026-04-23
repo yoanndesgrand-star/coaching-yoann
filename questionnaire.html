@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quel coaching est fait pour toi ? — Yoann Desgrand</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #080808; --surface: #111111; --surface2: #161616;
+      --border: #222222; --gold: #C4973A; --gold-light: #E2B95A;
+      --text: #F0EAE0; --muted: #7a7065; --dim: #2a2520;
+      --radius: 14px;
+    }
+    html, body { height: 100%; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Outfit', sans-serif; font-weight: 300;
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.35;
+    }
+
+    /* ─── LAYOUT ─── */
+    .wrapper {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px 20px; position: relative; z-index: 1;
+    }
+    .quiz-box {
+      width: 100%; max-width: 640px;
+    }
+
+    /* ─── TOP BAR ─── */
+    .top-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 40px;
+    }
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px; font-weight: 400;
+      color: var(--text); text-decoration: none;
+    }
+    .logo span { color: var(--gold); }
+    .step-counter { font-size: 12px; color: var(--muted); }
+
+    /* ─── PROGRESS ─── */
+    .progress-bar {
+      height: 2px; background: var(--dim);
+      border-radius: 2px; margin-bottom: 52px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; background: var(--gold);
+      border-radius: 2px;
+      transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ─── QUESTION ─── */
+    .question-block { animation: fadeIn 0.35s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .q-label {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 14px; display: block;
+    }
+    .q-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(26px, 5vw, 38px);
+      font-weight: 300; line-height: 1.15;
+      margin-bottom: 36px;
+    }
+    .q-text em { font-style: italic; color: var(--gold); }
+
+    /* ─── OPTIONS ─── */
+    .options { display: flex; flex-direction: column; gap: 12px; }
+    .option {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 18px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    .option:hover {
+      border-color: rgba(196,151,58,0.4);
+      background: rgba(196,151,58,0.04);
+    }
+    .option.selected {
+      border-color: var(--gold);
+      background: rgba(196,151,58,0.08);
+    }
+    .option-icon {
+      font-size: 22px; flex-shrink: 0;
+      width: 36px; text-align: center;
+      margin-top: 1px;
+    }
+    .option-content {}
+    .option-title {
+      font-size: 15px; font-weight: 400;
+      display: block; margin-bottom: 3px;
+    }
+    .option-sub {
+      font-size: 12px; color: var(--muted);
+    }
+
+    /* ─── NAV BUTTONS ─── */
+    .nav-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 32px;
+    }
+    .btn-back {
+      background: none; border: none; color: var(--muted);
+      font-size: 13px; cursor: pointer; padding: 8px 0;
+      font-family: 'Outfit', sans-serif;
+      transition: color 0.2s;
+    }
+    .btn-back:hover { color: var(--text); }
+    .btn-next {
+      background: var(--gold); color: #000;
+      border: none; padding: 14px 36px;
+      border-radius: 8px; font-size: 14px; font-weight: 500;
+      cursor: pointer; font-family: 'Outfit', sans-serif;
+      transition: all 0.2s; opacity: 0.3;
+      pointer-events: none;
+    }
+    .btn-next.active { opacity: 1; pointer-events: auto; }
+    .btn-next.active:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    /* ─── RÉSULTAT ─── */
+    .result-block { animation: fadeIn 0.5s ease; }
+    .result-header { text-align: center; margin-bottom: 48px; }
+    .result-header .checkmark {
+      font-size: 48px; display: block; margin-bottom: 20px;
+    }
+    .result-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 5vw, 44px); font-weight: 300;
+      margin-bottom: 10px;
+    }
+    .result-header h2 em { font-style: italic; color: var(--gold); }
+    .result-header p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    .result-card {
+      background: var(--surface);
+      border: 1px solid rgba(196,151,58,0.4);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 16px;
+      position: relative; overflow: hidden;
+    }
+    .result-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(196,151,58,0.06), transparent);
+    }
+    .result-card .primary-tag {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: #000; background: var(--gold);
+      padding: 4px 12px; border-radius: 4px;
+      display: inline-block; margin-bottom: 16px;
+    }
+    .result-card .offer-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px; font-weight: 400;
+      display: block; margin-bottom: 8px; position: relative; z-index: 1;
+    }
+    .result-card .offer-price {
+      font-size: 22px; font-weight: 600; color: var(--gold);
+      display: block; margin-bottom: 16px; position: relative; z-index: 1;
+    }
+    .result-card .offer-why {
+      font-size: 13px; color: var(--muted); line-height: 1.7;
+      position: relative; z-index: 1;
+    }
+    .result-card .offer-features {
+      list-style: none; margin-top: 16px;
+      display: flex; flex-direction: column; gap: 8px;
+      position: relative; z-index: 1;
+    }
+    .result-card .offer-features li {
+      font-size: 13px; color: var(--muted);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .result-card .offer-features li::before { content: '→'; color: var(--gold); font-size: 11px; }
+
+    .secondary-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 12px;
+    }
+    .secondary-card .sec-title {
+      font-size: 15px; font-weight: 400; margin-bottom: 4px;
+    }
+    .secondary-card .sec-price { font-size: 13px; color: var(--gold); }
+    .secondary-card .sec-why { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+    .result-ctas {
+      display: flex; flex-direction: column; gap: 12px;
+      margin-top: 28px;
+    }
+    .btn-full-gold {
+      display: block; width: 100%; text-align: center;
+      background: var(--gold); color: #000;
+      padding: 16px; border-radius: 10px;
+      font-size: 14px; font-weight: 500;
+      text-decoration: none; border: none; cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      transition: background 0.2s;
+    }
+    .btn-full-gold:hover { background: var(--gold-light); }
+    .btn-full-outline {
+      display: block; width: 100%; text-align: center;
+      background: transparent; color: var(--text);
+      padding: 16px; border-radius: 10px;
+      font-size: 14px; font-weight: 400;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .btn-full-outline:hover { border-color: var(--gold); color: var(--gold); }
+    .restart-link {
+      text-align: center; margin-top: 20px;
+      font-size: 12px; color: var(--dim);
+      cursor: pointer; transition: color 0.2s;
+    }
+    .restart-link:hover { color: var(--muted); }
+
+    /* HIDDEN */
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="quiz-box">
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+      <a href="coaching-yoann-v5.html" class="logo">Yoann <span>Desgrand</span></a>
+      <span class="step-counter" id="stepCounter">1 / 10</span>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:10%"></div>
+    </div>
+
+    <!-- QUIZ -->
+    <div id="quizArea"></div>
+
+    <!-- RÉSULTAT -->
+    <div id="resultArea" class="hidden"></div>
+
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// QUESTIONS
+// ═══════════════════════════════════════════════
+const questions = [
+  {
+    id: 1,
+    label: "Question 1 — Objectif",
+    text: "Quel est ton <em>objectif principal</em> ?",
+    options: [
+      { icon: "🔥", title: "Perdre du poids", sub: "Brûler des graisses, affiner ma silhouette", scores: { F:3, G:2, E:1 } },
+      { icon: "💪", title: "Prendre de la masse musculaire", sub: "Gagner en force et en volume", scores: { C:2, D:2, E:1 } },
+      { icon: "⚡", title: "Me remettre en forme", sub: "Retrouver de l'énergie et du tonus", scores: { A:2, B:2, D:1 } },
+      { icon: "🏆", title: "Améliorer mes performances", sub: "Progresser sur un sport ou une discipline", scores: { C:2, E:2, D:1 } },
+    ]
+  },
+  {
+    id: 2,
+    label: "Question 2 — Situation actuelle",
+    text: "Tu t'entraînes <em>en ce moment</em> ?",
+    options: [
+      { icon: "🛋️", title: "Jamais ou presque", sub: "Je n'ai pas de routine sportive", scores: { A:3, B:2 } },
+      { icon: "😤", title: "Oui, mais sans résultats", sub: "Je m'entraîne mais je plafonne", scores: { C:2, D:2, F:1 } },
+      { icon: "✅", title: "Oui, régulièrement", sub: "J'ai une routine mais je veux faire mieux", scores: { D:2, E:2, F:1 } },
+    ]
+  },
+  {
+    id: 3,
+    label: "Question 3 — Autonomie",
+    text: "Tu as du mal à <em>te motiver seul(e)</em> ?",
+    options: [
+      { icon: "🙋", title: "Oui, j'ai besoin d'être encadré(e)", sub: "Sans coach, je lâche rapidement", scores: { C:3, D:3 } },
+      { icon: "🤔", title: "Ça dépend des jours", sub: "Parfois motivé(e), parfois pas", scores: { B:2, D:2 } },
+      { icon: "🎯", title: "Non, je suis autonome", sub: "Je n'ai besoin que d'un programme clair", scores: { E:3, F:2 } },
+    ]
+  },
+  {
+    id: 4,
+    label: "Question 4 — Expérience",
+    text: "Quel est ton niveau <em>en musculation</em> ?",
+    options: [
+      { icon: "🌱", title: "Débutant(e) complet(e)", sub: "Je ne connais pas les exercices de base", scores: { A:3, B:2, C:1 } },
+      { icon: "📈", title: "Intermédiaire", sub: "Je connais les bases mais j'ai des lacunes", scores: { B:2, D:2, C:1 } },
+      { icon: "🔬", title: "Avancé(e)", sub: "Je m'entraîne sérieusement depuis plusieurs années", scores: { E:2, F:2, D:1 } },
+    ]
+  },
+  {
+    id: 5,
+    label: "Question 5 — Localisation",
+    text: "Tu peux venir t'entraîner à <em>Paris 13e</em> (ON AIR BNF) ?",
+    options: [
+      { icon: "🗺️", title: "Oui, facilement", sub: "C'est près de chez moi ou de mon travail", scores: { C:3, D:3, B:2 } },
+      { icon: "🚇", title: "Oui, parfois", sub: "Je peux me déplacer de temps en temps", scores: { B:3, D:1 } },
+      { icon: "❌", title: "Non, ce n'est pas possible", sub: "La distance est trop grande", scores: { E:3, F:3 } },
+    ]
+  },
+  {
+    id: 6,
+    label: "Question 6 — Alimentation",
+    text: "Ton alimentation <em>impacte tes résultats</em>, tu en es conscient(e) ?",
+    options: [
+      { icon: "🍔", title: "Oui, c'est clairement un problème", sub: "Je mange mal et je sais que ça me bloque", scores: { F:3, G:3 } },
+      { icon: "🤷", title: "Peut-être, je ne sais pas trop", sub: "Je ne maîtrise pas vraiment la nutrition", scores: { F:2, G:1 } },
+      { icon: "🥗", title: "Non, je mange correctement", sub: "Mon alimentation est équilibrée", scores: { B:1, C:1, E:1 } },
+    ]
+  },
+  {
+    id: 7,
+    label: "Question 7 — Type de suivi",
+    text: "Comment tu préfères <em>être suivi(e)</em> ?",
+    options: [
+      { icon: "🤝", title: "En présentiel avec un coach", sub: "Je veux quelqu'un à mes côtés pendant mes séances", scores: { C:3, B:2 } },
+      { icon: "📱", title: "Via une application + messages", sub: "Je veux un programme et pouvoir poser mes questions", scores: { E:3, F:2 } },
+      { icon: "⚡", title: "Les deux, selon les semaines", sub: "Du présentiel et du suivi à distance", scores: { D:3, F:2 } },
+    ]
+  },
+  {
+    id: 8,
+    label: "Question 8 — Budget",
+    text: "Ton budget mensuel pour <em>investir dans ton coaching</em> ?",
+    options: [
+      { icon: "💶", title: "Moins de 100€ / mois", sub: "Je veux commencer progressivement", scores: { E:3, A:1 } },
+      { icon: "💰", title: "Entre 100€ et 200€ / mois", sub: "Je suis prêt(e) à investir sérieusement", scores: { B:2, D:2, F:2 } },
+      { icon: "🚀", title: "Plus de 200€ / mois", sub: "Je veux les meilleurs résultats possibles", scores: { C:3, F:3 } },
+    ]
+  },
+  {
+    id: 9,
+    label: "Question 9 — Engagement",
+    text: "Sur combien de temps <em>tu veux t'engager</em> ?",
+    options: [
+      { icon: "👀", title: "Je veux d'abord tester", sub: "Une séance pour voir si ça me convient", scores: { A:4 } },
+      { icon: "📆", title: "1 à 2 mois", sub: "Quelques semaines pour voir les premiers résultats", scores: { B:3, E:1 } },
+      { icon: "💪", title: "3 mois et plus", sub: "Je m'engage sur la durée pour de vrais changements", scores: { C:3, F:3, D:2 } },
+    ]
+  },
+  {
+    id: 10,
+    label: "Question 10 — Expérience coach",
+    text: "Tu as déjà travaillé avec <em>un coach sportif</em> ?",
+    options: [
+      { icon: "🆕", title: "Non, c'est la première fois", sub: "Je n'ai jamais été suivi par un professionnel", scores: { A:3, B:1 } },
+      { icon: "😔", title: "Oui, mais ça n'a pas fonctionné", sub: "J'ai eu un suivi mais sans vrais résultats", scores: { C:2, D:2, F:1 } },
+      { icon: "🌟", title: "Oui, et j'ai eu des résultats", sub: "J'ai une bonne expérience du coaching", scores: { D:2, E:2, C:1 } },
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════════
+// OFFRES
+// ═══════════════════════════════════════════════
+const offers = {
+  A: {
+    name: "Séance Découverte",
+    price: "OFFERTE",
+    tag: "Pour commencer sans risque",
+    why: "Tu es au début de ton parcours ou tu veux tester avant de t'engager. La séance découverte est faite pour toi : on fait un bilan complet, on définit tes objectifs, et tu repartiras avec un plan clair.",
+    features: ["Bilan complet de ta condition physique", "Définition de tes objectifs", "Présentation du programme adapté", "Sans CB, sans engagement"],
+    cta: "Réserver ma séance découverte",
+    link: "https://calendly.com/TON-LIEN-CALENDLY",
+    stripe: null
+  },
+  B: {
+    name: "Pack 5 Séances",
+    price: "275€ — 55€/séance",
+    tag: "Pour progresser rapidement",
+    why: "Tu veux apprendre les bons gestes, acquérir de l'autonomie, et voir de premiers résultats concrets. 5 séances suffisent pour poser des bases solides.",
+    features: ["5 séances individuelles à ON AIR BNF Paris 13e", "Programme progressif sur mesure", "Bilan mi-parcours inclus", "Valable 3 mois", "CB ou espèces acceptés"],
+    cta: "Acheter le pack 5 séances",
+    link: "STRIPE_PACK_5",
+    stripe: true
+  },
+  C: {
+    name: "Pack 10 Séances — Programme SHIFT",
+    price: "500€ — 50€/séance",
+    tag: "Pour une vraie transformation",
+    why: "Tu as besoin d'un encadrement régulier et tu veux de vrais résultats. Le programme SHIFT sur 10 séances est conçu pour transformer ton corps en profondeur, avec un suivi rigoureux.",
+    features: ["10 séances individuelles à ON AIR BNF Paris 13e", "Programme SHIFT complet", "Suivi nutrition de base offert", "Bilan final de transformation", "Valable 6 mois", "CB ou espèces acceptés"],
+    cta: "Acheter le pack 10 séances",
+    link: "STRIPE_PACK_10",
+    stripe: true
+  },
+  D: {
+    name: "Séances en salle + App Sport",
+    price: "Séances 50€/u + 59€/mois",
+    tag: "Le meilleur des deux mondes",
+    why: "Tu veux du présentiel ET un suivi au quotidien. L'abonnement app te donne accès aux séances en salle à tarif réduit (50€ au lieu de 60€) ET à un programme app entre les séances.",
+    features: ["Séances à ON AIR BNF à 50€ (au lieu de 60€)", "Programme sport sur mesure via Harmony", "Suivi hebdomadaire via messagerie", "Ajustements en continu"],
+    cta: "Commencer l'abonnement sport",
+    link: "STRIPE_ABONNEMENT_SPORT",
+    stripe: true
+  },
+  E: {
+    name: "Coaching Sport en ligne",
+    price: "59€ / mois",
+    tag: "Pour progresser où tu veux",
+    why: "Tu es autonome et tu n'as pas besoin d'un coach à tes côtés à chaque séance. L'application te donne un programme sur mesure, un suivi régulier et un accès direct à Yoann.",
+    features: ["Programme sport sur mesure via Harmony", "Ajustements hebdomadaires", "Messagerie directe avec Yoann", "Sans engagement"],
+    cta: "Commencer le coaching sport",
+    link: "STRIPE_ABONNEMENT_SPORT",
+    stripe: true
+  },
+  F: {
+    name: "Sport + Nutrition",
+    price: "149€ / mois",
+    tag: "La solution complète",
+    why: "Tu veux attaquer le problème sous tous les angles : entraînement ET alimentation. C'est l'offre la plus efficace pour perdre du poids ou prendre de la masse durablement.",
+    features: ["Programme sport sur mesure via Harmony", "Plan nutritionnel personnalisé", "Suivi bilan sanguin & carences", "Messagerie directe avec Yoann", "Sans engagement"],
+    cta: "Commencer sport + nutrition",
+    link: "STRIPE_ABONNEMENT_COMPLET",
+    stripe: true
+  },
+  G: {
+    name: "Coaching Nutrition",
+    price: "119€ / mois",
+    tag: "Quand l'alimentation est la clé",
+    why: "Tu t'entraînes déjà mais tes résultats stagnent à cause de ton alimentation. Un suivi nutritionnel seul peut suffire à débloquer ta progression.",
+    features: ["Plan nutritionnel personnalisé", "Rééquilibrage alimentaire durable", "Suivi bilan sanguin & carences", "Ajustements mensuels", "Sans engagement"],
+    cta: "Commencer le suivi nutrition",
+    link: "STRIPE_ABONNEMENT_NUTRI",
+    stripe: true
+  }
+};
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let currentQ = 0;
+let answers = []; // index of selected option per question
+let scores = { A:0, B:0, C:0, D:0, E:0, F:0, G:0 };
+
+// ═══════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════
+function render() {
+  const q = questions[currentQ];
+  const selected = answers[currentQ];
+  const pct = ((currentQ + 1) / questions.length) * 100;
+
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stepCounter').textContent = `${currentQ + 1} / ${questions.length}`;
+
+  const html = `
+    <div class="question-block">
+      <span class="q-label">${q.label}</span>
+      <h2 class="q-text">${q.text}</h2>
+      <div class="options">
+        ${q.options.map((opt, i) => `
+          <button class="option ${selected === i ? 'selected' : ''}" onclick="selectOption(${i})">
+            <span class="option-icon">${opt.icon}</span>
+            <span class="option-content">
+              <span class="option-title">${opt.title}</span>
+              <span class="option-sub">${opt.sub}</span>
+            </span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="nav-row">
+        <button class="btn-back" onclick="goBack()" ${currentQ === 0 ? 'style="visibility:hidden"' : ''}>← Précédent</button>
+        <button class="btn-next ${selected !== undefined ? 'active' : ''}" id="btnNext" onclick="goNext()">
+          ${currentQ === questions.length - 1 ? 'Voir mon résultat →' : 'Continuer →'}
+        </button>
+      </div>
+    </div>
+  `;
+  document.getElementById('quizArea').innerHTML = html;
+}
+
+function selectOption(idx) {
+  answers[currentQ] = idx;
+  render();
+}
+
+function goNext() {
+  if (answers[currentQ] === undefined) return;
+  if (currentQ < questions.length - 1) {
+    currentQ++;
+    render();
+  } else {
+    showResult();
+  }
+}
+
+function goBack() {
+  if (currentQ > 0) { currentQ--; render(); }
+}
+
+// ═══════════════════════════════════════════════
+// CALCUL DU RÉSULTAT
+// ═══════════════════════════════════════════════
+function showResult() {
+  // Reset scores
+  scores = { A:0, B:0, C:0, D:0, E:0, F:0, G:0 };
+
+  // Accumulate
+  questions.forEach((q, qi) => {
+    const sel = answers[qi];
+    if (sel !== undefined) {
+      const optScores = q.options[sel].scores;
+      for (const [k, v] of Object.entries(optScores)) {
+        scores[k] = (scores[k] || 0) + v;
+      }
+    }
+  });
+
+  // Sort
+  const ranked = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  const [topKey] = ranked[0];
+  const secondaries = ranked.slice(1, 3).filter(([,v]) => v > 0).map(([k]) => k);
+
+  const top = offers[topKey];
+  const calendlyUrl = 'https://calendly.com/TON-LIEN-CALENDLY';
+
+  // Build secondaries HTML
+  const secHTML = secondaries.map(k => {
+    const o = offers[k];
+    return `
+      <div class="secondary-card">
+        <div class="sec-title">${o.name}</div>
+        <div class="sec-price">${o.price}</div>
+        <div class="sec-why">${o.why.substring(0, 100)}...</div>
+      </div>
+    `;
+  }).join('');
+
+  const ctaLink = top.stripe ? top.link : calendlyUrl;
+  const ctaTarget = '_blank';
+
+  const html = `
+    <div class="result-block">
+      <div class="result-header">
+        <span class="checkmark">✨</span>
+        <h2>Voici <em>ton offre idéale</em></h2>
+        <p>D'après tes réponses, voici ce qui correspond le mieux à ton profil et tes objectifs.</p>
+      </div>
+
+      <div class="result-card">
+        <span class="primary-tag">⭐ Recommandé pour toi</span>
+        <span class="offer-name">${top.name}</span>
+        <span class="offer-price">${top.price}</span>
+        <p class="offer-why">${top.why}</p>
+        <ul class="offer-features">
+          ${top.features.map(f => `<li>${f}</li>`).join('')}
+        </ul>
+      </div>
+
+      ${secondaries.length > 0 ? `
+        <p style="font-size:12px;color:var(--muted);margin:24px 0 12px;letter-spacing:0.05em;">AUTRES OPTIONS QUI POURRAIENT TE CONVENIR</p>
+        ${secHTML}
+      ` : ''}
+
+      <div class="result-ctas">
+        ${topKey === 'A'
+          ? `<a href="${calendlyUrl}" target="${ctaTarget}" class="btn-full-gold">🎁 ${top.cta}</a>`
+          : `<a href="${calendlyUrl}" target="${ctaTarget}" class="btn-full-gold">🎁 Réserver ma séance découverte gratuite</a>
+             <a href="${ctaLink}" target="${ctaTarget}" class="btn-full-outline">${top.cta}</a>`
+        }
+        <a href="https://wa.me/33687207855?text=Bonjour%20Yoann%2C%20j%27ai%20fait%20le%20questionnaire%20et%20j%27aimerais%20en%20savoir%20plus." target="_blank" class="btn-full-outline">💬 Poser une question à Yoann</a>
+      </div>
+
+      <p class="restart-link" onclick="restartQuiz()">↺ Refaire le questionnaire</p>
+    </div>
+  `;
+
+  document.getElementById('quizArea').classList.add('hidden');
+  document.getElementById('stepCounter').textContent = 'Résultat';
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('resultArea').classList.remove('hidden');
+  document.getElementById('resultArea').innerHTML = html;
+}
+
+function restartQuiz() {
+  currentQ = 0;
+  answers = [];
+  scores = { A:0, B:0, C:0, D:0, E:0, F:0, G:0 };
+  document.getElementById('resultArea').classList.add('hidden');
+  document.getElementById('quizArea').classList.remove('hidden');
+  render();
+}
+
+// INIT
+render();
+</script>
+</body>
+</html>
