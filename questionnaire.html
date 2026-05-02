@@ -139,6 +139,36 @@
     .btn-next.active { opacity: 1; pointer-events: auto; }
     .btn-next.active:hover { background: var(--gold-light); transform: translateY(-1px); }
 
+
+    /* ─── FORMULAIRE CONTACT ─── */
+    .contact-block { animation: fadeIn 0.5s ease; }
+    .contact-block h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(26px, 5vw, 38px); font-weight: 300;
+      line-height: 1.15; margin-bottom: 12px;
+    }
+    .contact-block h2 em { font-style: italic; color: var(--gold); }
+    .contact-block p { font-size: 13px; color: var(--muted); margin-bottom: 32px; line-height: 1.6; }
+    .contact-form { display: flex; flex-direction: column; gap: 14px; }
+    .contact-form input {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px 18px;
+      color: var(--text); font-size: 14px; font-family: 'Outfit', sans-serif;
+      outline: none; transition: border-color 0.2s;
+      width: 100%;
+    }
+    .contact-form input:focus { border-color: var(--gold); }
+    .contact-form input::placeholder { color: var(--muted); }
+    .btn-submit {
+      background: var(--gold); color: #000; border: none;
+      padding: 16px; border-radius: 10px; font-size: 14px; font-weight: 500;
+      cursor: pointer; font-family: 'Outfit', sans-serif;
+      transition: all 0.2s; margin-top: 4px;
+    }
+    .btn-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .contact-error { font-size: 12px; color: #f87171; margin-top: -6px; }
+
     /* ─── RÉSULTAT ─── */
     .result-block { animation: fadeIn 0.5s ease; }
     .result-header { text-align: center; margin-bottom: 48px; }
@@ -243,6 +273,7 @@
     /* HIDDEN */
     .hidden { display: none !important; }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -263,6 +294,7 @@
     <div id="quizArea"></div>
 
     <!-- RÉSULTAT -->
+    <div id="contactArea" class="hidden"></div>
     <div id="resultArea" class="hidden"></div>
 
   </div>
@@ -507,7 +539,7 @@ function goNext() {
     currentQ++;
     render();
   } else {
-    showResult();
+    showContact();
   }
 }
 
@@ -518,22 +550,8 @@ function goBack() {
 // ═══════════════════════════════════════════════
 // CALCUL DU RÉSULTAT
 // ═══════════════════════════════════════════════
-function showResult() {
-  // Reset scores
-  scores = { A:0, B:0, C:0, D:0, E:0, F:0, G:0 };
-
-  // Accumulate
-  questions.forEach((q, qi) => {
-    const sel = answers[qi];
-    if (sel !== undefined) {
-      const optScores = q.options[sel].scores;
-      for (const [k, v] of Object.entries(optScores)) {
-        scores[k] = (scores[k] || 0) + v;
-      }
-    }
-  });
-
-  // Sort
+function showResult(prenom) {
+  // Utiliser les scores déjà calculés
   const ranked = Object.entries(scores).sort((a, b) => b[1] - a[1]);
   const [topKey] = ranked[0];
   const secondaries = ranked.slice(1, 3).filter(([,v]) => v > 0).map(([k]) => k);
@@ -604,6 +622,7 @@ function restartQuiz() {
   answers = [];
   scores = { A:0, B:0, C:0, D:0, E:0, F:0, G:0 };
   document.getElementById('resultArea').classList.add('hidden');
+  document.getElementById('contactArea').classList.add('hidden');
   document.getElementById('quizArea').classList.remove('hidden');
   render();
 }
