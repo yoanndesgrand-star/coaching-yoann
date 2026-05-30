@@ -530,18 +530,21 @@ function render() {
       </div>
       <div class="nav-row">
         <button class="btn-back" onclick="goBack()" ${currentQ === 0 ? 'style="visibility:hidden"' : ''}>← Précédent</button>
-        <button class="btn-next ${selected !== undefined ? 'active' : ''}" id="btnNext" onclick="goNext()">
-          ${currentQ === questions.length - 1 ? 'Voir mon résultat →' : 'Continuer →'}
-        </button>
       </div>
     </div>
   `;
   document.getElementById('quizArea').innerHTML = html;
 }
 
+let advanceTimer = null;
 function selectOption(idx) {
   answers[currentQ] = idx;
-  render();
+  render();                                  // surligne la réponse choisie
+  if (advanceTimer) clearTimeout(advanceTimer);
+  advanceTimer = setTimeout(function() {     // puis enchaîne tout seul
+    advanceTimer = null;
+    goNext();
+  }, 280);
 }
 
 function goNext() {
@@ -555,6 +558,7 @@ function goNext() {
 }
 
 function goBack() {
+  if (advanceTimer) { clearTimeout(advanceTimer); advanceTimer = null; }
   if (currentQ > 0) { currentQ--; render(); }
 }
 
