@@ -85,6 +85,7 @@
     /* ─── OPTIONS ─── */
     .options { display: flex; flex-direction: column; gap: 12px; }
     .option {
+      color: var(--text);
       display: flex; align-items: flex-start; gap: 16px;
       padding: 18px 20px;
       background: var(--surface);
@@ -109,6 +110,7 @@
     }
     .option-content {}
     .option-title {
+      color: var(--text);
       font-size: 15px; font-weight: 400;
       display: block; margin-bottom: 3px;
     }
@@ -492,6 +494,15 @@ let answers = []; // index of selected option per question
 let scores = { A:0, B:0, C:0, D:0, E:0, F:0, G:0 };
 
 // ═══════════════════════════════════════════════
+// EMAILJS (facultatif) — pour recevoir les leads par email.
+// Renseigne tes 3 identifiants depuis https://www.emailjs.com (sinon le quiz
+// fonctionne quand même, il n'enverra simplement pas d'email).
+// ═══════════════════════════════════════════════
+const EMAILJS_PUBLIC_KEY  = '';   // ex : 'AbCd1234EfGh'
+const EMAILJS_SERVICE_ID  = '';   // ex : 'service_xxxxxx'
+const EMAILJS_TEMPLATE_ID = '';   // ex : 'template_xxxxxx'
+
+// ═══════════════════════════════════════════════
 // RENDER
 // ═══════════════════════════════════════════════
 function render() {
@@ -548,6 +559,76 @@ function goBack() {
 }
 
 // ═══════════════════════════════════════════════
+// ÉTAPE CONTACT (calcul des scores + capture du lead)
+// ═══════════════════════════════════════════════
+function showContact() {
+  // Calcul des scores à partir des réponses
+  scores = { A:0, B:0, C:0, D:0, E:0, F:0, G:0 };
+  answers.forEach(function(ansIdx, qi) {
+    if (ansIdx === undefined || !questions[qi]) return;
+    var opt = questions[qi].options[ansIdx];
+    if (opt && opt.scores) {
+      Object.keys(opt.scores).forEach(function(k) {
+        scores[k] = (scores[k] || 0) + opt.scores[k];
+      });
+    }
+  });
+
+  var html = `
+    <div class="contact-block">
+      <span class="q-label">Dernière étape</span>
+      <h2>Découvre <em>ton offre idéale</em></h2>
+      <p>Laisse-moi ton prénom et ton email pour voir le résultat. Je m'en sers uniquement pour te recontacter si tu le souhaites — aucun spam.</p>
+      <div class="contact-form">
+        <input type="text"  id="cPrenom" placeholder="Ton prénom *" autocomplete="given-name" />
+        <input type="email" id="cEmail"  placeholder="Ton email *" autocomplete="email" />
+        <input type="tel"   id="cTel"    placeholder="Ton téléphone (facultatif)" autocomplete="tel" />
+        <button class="btn-submit" id="cSubmit" onclick="submitContact()">Voir mon résultat →</button>
+        <p id="cError" style="color:#e0694a;font-size:12px;margin-top:12px;display:none;">Merci d'indiquer ton prénom et un email valide.</p>
+      </div>
+    </div>
+  `;
+  document.getElementById('quizArea').classList.add('hidden');
+  document.getElementById('stepCounter').textContent = 'Dernière étape';
+  var ca = document.getElementById('contactArea');
+  ca.classList.remove('hidden');
+  ca.innerHTML = html;
+  var inp = document.getElementById('cPrenom'); if (inp) inp.focus();
+}
+
+function submitContact() {
+  var prenom = (document.getElementById('cPrenom').value || '').trim();
+  var email  = (document.getElementById('cEmail').value  || '').trim();
+  var tel    = (document.getElementById('cTel').value    || '').trim();
+  var emailOk = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+  if (!prenom || !emailOk) {
+    var err = document.getElementById('cError'); if (err) err.style.display = 'block';
+    return;
+  }
+  // Profil gagnant + récap des réponses (pour l'email)
+  var ranked = Object.entries(scores).sort(function(a, b){ return b[1] - a[1]; });
+  var topKey = ranked[0][0];
+  var top = offers[topKey] || {};
+  var recap = answers.map(function(ai, qi){
+    var o = questions[qi].options[ai];
+    return (qi + 1) + '. ' + questions[qi].label.replace(/^Question \d+ — /, '') + ' : ' + (o ? o.title : '—');
+  }).join('\n');
+
+  // Envoi EmailJS — facultatif, n'empêche jamais l'affichage du résultat
+  try {
+    if (window.emailjs && EMAILJS_PUBLIC_KEY && EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID) {
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        prenom: prenom, email: email, telephone: tel || 'non renseigné',
+        offre: top.name || topKey, profil: topKey, reponses: recap
+      });
+    }
+  } catch (e) { /* silencieux : le résultat s'affiche quand même */ }
+
+  showResult(prenom);
+}
+
+// ═══════════════════════════════════════════════
 // CALCUL DU RÉSULTAT
 // ═══════════════════════════════════════════════
 function showResult(prenom) {
@@ -578,7 +659,7 @@ function showResult(prenom) {
     <div class="result-block">
       <div class="result-header">
         <span class="checkmark">✨</span>
-        <h2>Voici <em>ton offre idéale</em></h2>
+        <h2>Voici <em>ton offre idéale</em>${prenom ? ', ' + prenom : ''}</h2>
         <p>D'après tes réponses, voici ce qui correspond le mieux à ton profil et tes objectifs.</p>
       </div>
 
@@ -611,6 +692,7 @@ function showResult(prenom) {
   `;
 
   document.getElementById('quizArea').classList.add('hidden');
+  document.getElementById('contactArea').classList.add('hidden');
   document.getElementById('stepCounter').textContent = 'Résultat';
   document.getElementById('progressFill').style.width = '100%';
   document.getElementById('resultArea').classList.remove('hidden');
