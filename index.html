@@ -561,6 +561,165 @@
     }
     .app-included strong { color: var(--gold-light); }
 
+
+    /* ─── PREMIUM VISUAL SYSTEM ─── */
+    body {
+      background:
+        radial-gradient(circle at 20% 0%, rgba(196,151,58,0.10), transparent 32%),
+        radial-gradient(circle at 80% 22%, rgba(196,151,58,0.055), transparent 28%),
+        linear-gradient(180deg, #050505 0%, #090806 42%, #050505 100%);
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: auto -18vw 6vh auto;
+      width: 54vw;
+      height: 54vw;
+      border-radius: 50%;
+      background:
+        repeating-radial-gradient(circle, rgba(196,151,58,0.055) 0 1px, transparent 1px 34px),
+        radial-gradient(circle, rgba(196,151,58,0.055), transparent 68%);
+      opacity: .55;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(.2px);
+    }
+    .container { max-width: 1180px; }
+    nav {
+      padding: 18px 42px;
+      background: linear-gradient(180deg, rgba(5,5,5,0.88), rgba(5,5,5,0.62));
+      border-bottom: 1px solid rgba(196,151,58,0.08);
+    }
+    .nav-cta, .btn-primary, .card-cta.gold {
+      box-shadow: 0 14px 34px rgba(196,151,58,0.16), inset 0 1px 0 rgba(255,255,255,0.25);
+    }
+    .hero {
+      min-height: 92vh;
+      padding: 138px 0 92px;
+    }
+    .hero-bg {
+      background:
+        radial-gradient(ellipse 48% 70% at 76% 42%, rgba(196,151,58,0.12) 0%, transparent 68%),
+        radial-gradient(ellipse 30% 45% at 18% 58%, rgba(196,151,58,0.07) 0%, transparent 70%),
+        linear-gradient(120deg, rgba(255,255,255,0.025), transparent 38%);
+    }
+    .hero-content { max-width: 860px; }
+    .hero h1 { letter-spacing: -0.035em; text-wrap: balance; }
+    .hero-sub { max-width: 650px; color: #aaa099; }
+    .hero-proof {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: -20px 0 42px;
+      max-width: 720px;
+      opacity: 0; animation: fadeUp 0.9s ease forwards 0.55s;
+    }
+    .proof-item {
+      border: 1px solid rgba(196,151,58,0.16);
+      background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012));
+      border-radius: 14px;
+      padding: 14px 16px;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.22);
+    }
+    .proof-item strong { display:block; font-size: 18px; color: var(--text); font-weight: 500; }
+    .proof-item span { display:block; margin-top: 2px; font-size: 11px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+    .section-header { position: relative; padding-top: 8px; }
+    .section-header::before {
+      content: '';
+      position: absolute;
+      left: 50%; top: -18px;
+      transform: translateX(-50%);
+      width: 120px; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(196,151,58,0.9), transparent);
+    }
+    .price-card, .lieu-card {
+      border-color: rgba(196,151,58,0.10);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012)),
+        var(--surface);
+      box-shadow: 0 22px 70px rgba(0,0,0,0.26);
+      overflow: hidden;
+    }
+    .price-card::after, .lieu-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 12% 0%, rgba(196,151,58,0.11), transparent 34%);
+      pointer-events: none;
+      opacity: .75;
+    }
+    .price-card > *, .lieu-card > * { position: relative; z-index: 1; }
+    .card-label { color: var(--gold); }
+    .promo-banner {
+      background:
+        linear-gradient(120deg, rgba(196,151,58,0.12), rgba(196,151,58,0.035)),
+        rgba(255,255,255,0.018);
+      border-color: rgba(196,151,58,0.26);
+      box-shadow: 0 22px 70px rgba(0,0,0,0.28);
+      position: relative;
+      overflow: hidden;
+    }
+    .promo-banner::before {
+      content: 'EASY LIFE';
+      position: absolute;
+      right: 26px;
+      bottom: -4px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 58px;
+      letter-spacing: .08em;
+      color: rgba(196,151,58,0.055);
+      pointer-events: none;
+    }
+    .promo-mark {
+      flex-shrink: 0;
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(196,151,58,0.35);
+      display:flex; align-items:center; justify-content:center;
+      color: var(--gold-light);
+      font-size: 11px;
+      letter-spacing: .14em;
+      font-weight: 600;
+      background: rgba(0,0,0,0.24);
+    }
+    .steps-grid { gap: 18px; }
+    .step {
+      text-align: left;
+      padding: 28px;
+      border: 1px solid rgba(196,151,58,0.12);
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.028), rgba(255,255,255,0.010));
+      min-height: 220px;
+    }
+    .step-num {
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      color: var(--gold);
+      letter-spacing: .22em;
+      font-weight: 600;
+      margin-bottom: 34px;
+    }
+    .step-num::before { content: 'ÉTAPE '; }
+    .step h3 { font-size: 24px; }
+    .lieu-card { position: relative; }
+    .cta-section {
+      margin: 40px auto 0;
+      max-width: 1180px;
+      border-radius: 34px;
+      border: 1px solid rgba(196,151,58,0.16);
+      background:
+        linear-gradient(180deg, rgba(5,5,5,0.18), rgba(5,5,5,0.92)),
+        radial-gradient(circle at 50% 0%, rgba(196,151,58,0.14), transparent 54%);
+      overflow: hidden;
+    }
+    .btn-primary, .btn-ghost, .card-cta, .nav-cta { letter-spacing: .01em; }
+    @media (max-width: 768px) {
+      .hero-proof { grid-template-columns: 1fr; }
+      .promo-banner::before { display: none; }
+      .step { min-height: 0; }
+    }
+
+
     /* ─── ANIMATIONS ─── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(24px); }
@@ -632,9 +791,15 @@
         <span class="badge"><span class="dot"></span>Sans engagement</span>
       </div>
 
+      <div class="hero-proof">
+        <div class="proof-item"><strong>Sport</strong><span>méthode structurée</span></div>
+        <div class="proof-item"><strong>Nutrition</strong><span>cadre réaliste</span></div>
+        <div class="proof-item"><strong>Suivi</strong><span>ajustements réguliers</span></div>
+      </div>
+
       <div class="hero-ctas">
-        <button class="btn-primary" onclick="openCalendly()">🎁 Réserver ma séance découverte — GRATUITE</button>
-        <a href="questionnaire.html" target="_blank" class="btn-ghost">🎯 Trouver mon coaching idéal</a>
+        <button class="btn-primary" onclick="openCalendly()">Réserver ma séance découverte</button>
+        <a href="questionnaire.html" target="_blank" class="btn-ghost">Trouver mon coaching idéal</a>
         <a href="offres.html" target="_blank" class="btn-ghost">Voir les offres</a>
       </div>
     </div>
@@ -828,7 +993,7 @@
 
       <!-- Promo abonnés -->
       <div class="promo-banner fade-in">
-        <span class="promo-icon">💡</span>
+        <span class="promo-mark">EL</span>
         <p>
           <strong>Abonnés coaching sport (59€/mois) :</strong> accédez aux séances en salle à <strong>50€ l'unité</strong> au lieu de 60€.
           Les personnes coachées ou suivies bénéficient d'un accès offert à l'application Easy Life pour retrouver leurs séances, leur suivi et leurs réservations au même endroit.
@@ -878,7 +1043,7 @@
   <section class="lieux-section">
     <div class="container">
       <div class="section-header fade-in">
-        <span class="label">Où ?</span>
+        <span class="label">Lieux</span>
         <h2>ON AIR Fitness — Paris</h2>
       </div>
       <div class="lieux-grid">
@@ -902,8 +1067,8 @@
       <h2>Prêt à changer<br><em>pour de vrai ?</em></h2>
       <p>Ta première séance est offerte. Aucune raison de ne pas commencer aujourd'hui.</p>
       <div class="cta-btns">
-        <button class="btn-primary" onclick="openCalendly()">🎁 Réserver ma séance découverte gratuite</button>
-        <a href="https://wa.me/33687207855?text=Bonjour%20Yoann%2C%20j%27aimerais%20avoir%20plus%20d%27informations%20sur%20ton%20coaching." class="btn-ghost" target="_blank">💬 Poser une question</a>
+        <button class="btn-primary" onclick="openCalendly()">Réserver ma séance découverte gratuite</button>
+        <a href="https://wa.me/33687207855?text=Bonjour%20Yoann%2C%20j%27aimerais%20avoir%20plus%20d%27informations%20sur%20ton%20coaching." class="btn-ghost" target="_blank">Poser une question</a>
       </div>
     </div>
   </section>
