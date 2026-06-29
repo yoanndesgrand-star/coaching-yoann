@@ -481,6 +481,96 @@
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--gold); }
 
+
+
+    /* ─── ABOUT / COACH ─── */
+    .about-section { padding: 100px 0; }
+    .about-card {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr);
+      gap: 48px;
+      align-items: center;
+      background:
+        linear-gradient(90deg, rgba(5,5,5,0.20), rgba(5,5,5,0.78) 46%, rgba(5,5,5,0.96) 100%),
+        url('assets/yoann-presentation.jpeg') center / cover no-repeat;
+      border: 1px solid rgba(196,151,58,0.22);
+      border-radius: 24px;
+      padding: 36px;
+      overflow: hidden;
+      position: relative;
+      min-height: 560px;
+    }
+    .about-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background:
+        radial-gradient(circle at 22% 22%, rgba(226,185,90,0.18), transparent 36%),
+        linear-gradient(180deg, rgba(8,8,8,0.08), rgba(8,8,8,0.82));
+      pointer-events: none;
+    }
+    .about-photo-wrap {
+      position: relative;
+      z-index: 1;
+      border-radius: 22px;
+      overflow: hidden;
+      min-height: 420px;
+      border: 1px solid rgba(196,151,58,0.25);
+      box-shadow: 0 30px 90px rgba(0,0,0,0.55);
+      background: #050505;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .about-photo-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(8,8,8,0.02), rgba(8,8,8,0.38)),
+        radial-gradient(circle at 52% 18%, rgba(226,185,90,0.20), transparent 36%);
+      pointer-events: none;
+    }
+    .about-photo {
+      width: 100%;
+      height: 100%;
+      min-height: 420px;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      filter: contrast(1.05) saturate(0.95) brightness(0.86);
+    }
+    .about-content {
+      position: relative;
+      z-index: 1;
+      padding: 30px;
+      border-radius: 22px;
+      background: rgba(8,8,8,0.56);
+      border: 1px solid rgba(196,151,58,0.18);
+      backdrop-filter: blur(10px);
+    }
+    .about-content h2 {
+      font-size: clamp(36px, 5vw, 58px);
+      margin: 12px 0 20px;
+    }
+    .about-content p {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 18px;
+      max-width: 560px;
+    }
+    .about-content strong { color: var(--text); font-weight: 500; }
+    .app-included {
+      margin-top: 26px;
+      padding: 18px 20px;
+      border-radius: 16px;
+      background: rgba(196,151,58,0.08);
+      border: 1px solid rgba(196,151,58,0.24);
+      color: var(--gold-light);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .app-included strong { color: var(--gold-light); }
+
     /* ─── ANIMATIONS ─── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(24px); }
@@ -501,10 +591,21 @@
     @media (max-width: 768px) {
       nav { padding: 16px 20px; }
       .hero { padding: 100px 0 60px; }
-      .pricing-grid, .online-grid, .steps-grid, .lieux-grid { grid-template-columns: 1fr; }
+      .pricing-grid, .online-grid, .steps-grid, .lieux-grid, .about-card { grid-template-columns: 1fr; }
       .price-card.featured { margin-top: 16px; }
       .hero-ctas { flex-direction: column; }
       .btn-primary, .btn-ghost { text-align: center; }
+      .about-card {
+        grid-template-columns: 1fr;
+        min-height: 620px;
+        padding: 24px;
+        gap: 28px;
+        background:
+          linear-gradient(180deg, rgba(5,5,5,0.18), rgba(5,5,5,0.92) 58%, rgba(5,5,5,0.98) 100%),
+          url('assets/yoann-presentation.jpeg') center top / cover no-repeat;
+      }
+      .about-photo-wrap, .about-photo { display: none; }
+      .about-content { padding: 22px; margin-top: 260px; }
     }
   </style>
 </head>
@@ -545,6 +646,29 @@
 
   <hr class="divider" />
 
+
+  <!-- ═══ À PROPOS ═══ -->
+  <section class="about-section" id="coach">
+    <div class="container">
+      <div class="about-card fade-in">
+        <div class="about-photo-wrap">
+          <img src="assets/yoann-presentation.jpeg" alt="Yoann Desgrand, coach sport et nutrition à Paris" class="about-photo" />
+        </div>
+        <div class="about-content">
+          <span class="label">Ton coach</span>
+          <h2>Un accompagnement<br><em>clair, exigeant, humain.</em></h2>
+          <p>Je suis Yoann Desgrand, coach sport et nutrition à Paris et en ligne. Mon rôle : t'aider à construire une méthode réaliste, adaptée à ton quotidien, pour progresser sans repartir de zéro toutes les trois semaines.</p>
+          <p>On travaille sur l'entraînement, l'alimentation, la régularité et les ajustements qui font vraiment la différence. L'objectif n'est pas de te donner un programme générique, mais un cadre précis, compréhensible et durable.</p>
+          <div class="app-included">
+            <strong>Accès Easy Life offert :</strong> les personnes coachées ou suivies bénéficient de l'accès à l'application Easy Life pour retrouver leurs séances, leur suivi, leurs réservations et leurs outils nutrition au même endroit.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
   <!-- ═══ COACHING EN LIGNE ═══ -->
   <section class="online-section" id="online">
     <div class="container">
@@ -559,13 +683,13 @@
         <!-- Sport -->
         <div class="price-card fade-in">
           <div class="card-label">Coaching sport</div>
-          <div class="card-title">App Harmony</div>
+          <div class="card-title">App Easy Life</div>
           <div class="card-price">
             <div class="price-amount"><sup>€</sup>59<span style="font-size:20px;font-weight:300;">/mois</span></div>
             <div class="price-per">sans engagement</div>
           </div>
           <ul class="card-features">
-            <li>Programme sport sur mesure via Harmony</li>
+            <li>Programme sport sur mesure via Easy Life</li>
             <li>Ajustements hebdomadaires</li>
             <li>Messagerie directe avec Yoann</li>
             <li>Séances en salle à 50€ (au lieu de 60€)</li>
@@ -600,7 +724,7 @@
             <div class="price-saving">Économie 29€/mois</div>
           </div>
           <ul class="card-features">
-            <li>App Harmony sport incluse</li>
+            <li>App Easy Life sport incluse</li>
             <li>Suivi nutritionnel complet inclus</li>
             <li>Approche corps & alimentation 360°</li>
             <li>Séances en salle à 50€</li>
@@ -711,7 +835,7 @@
         <span class="promo-icon">💡</span>
         <p>
           <strong>Abonnés coaching sport (59€/mois) :</strong> accédez aux séances en salle à <strong>50€ l'unité</strong> au lieu de 60€.
-          Souscris à l'application de coaching ci-dessous, puis réserve tes séances au tarif préférentiel.
+          Les personnes coachées ou suivies bénéficient d'un accès offert à l'application Easy Life pour retrouver leurs séances, leur suivi et leurs réservations au même endroit.
         </p>
       </div>
 
@@ -770,7 +894,7 @@
         <div class="lieu-card fade-in">
           <h3>Coaching en ligne</h3>
           <div class="adresse">Partout dans le monde</div>
-          <p>Via l'application Harmony et des appels réguliers. Un suivi sérieux, que tu sois à Paris ou à l'autre bout du monde. Le même niveau d'exigence.</p>
+          <p>Via l'application Easy Life et des appels réguliers. Un suivi sérieux, que tu sois à Paris ou à l'autre bout du monde. Le même niveau d'exigence.</p>
         </div>
       </div>
     </div>
